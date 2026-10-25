@@ -1,10 +1,7 @@
-import { registry } from "@/openapi.ts";
 import z from "zod";
 
-export const HttpErrorSchema = registry.register(
-  "HttpError",
-  z.object({
+export const HttpErrorSchema = z
+  .object({
     error: z.string(),
-  }),
-);
-
+  })
+  .openapi("HttpError");

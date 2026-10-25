@@ -1,6 +1,6 @@
 import z from "zod";
-import { HttpErrorSchema } from "./error.validator.ts";
 import { ResponseConfig, ZodRequestBody } from "@asteasolutions/zod-to-openapi";
+import { HttpErrorSchema } from "@/validators/error.validator.ts";
 
 export const jsonResponse = (
   description: string,
