@@ -18,7 +18,7 @@ import {
 } from "@/constants/time.ts";
 import env from "@/config/env.ts";
 
-const publicUserSelect = {
+export const publicUserSelect = {
   id: true,
   email: true,
   username: true,

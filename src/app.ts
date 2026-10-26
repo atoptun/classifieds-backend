@@ -4,6 +4,7 @@ import { generateOpenApiDocument } from "./openapi/index.ts";
 import notFound from "@/middleware/not-found.ts";
 import errorHandler from "@/middleware/error-handler.ts";
 import authRouter from "@/routes/auth.routes.ts";
+import routerAnnouncements from "@/routes/announcements.routers.ts";
 
 const app = express();
 
@@ -13,6 +14,7 @@ const openApiDocument = generateOpenApiDocument();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 app.use("/auth", authRouter);
+app.use("/announcements", routerAnnouncements);
 
 app.use(notFound);
 app.use(errorHandler);

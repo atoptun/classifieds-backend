@@ -1,0 +1,77 @@
+@baseUrl = http://localhost:3000
+@accessToken = YOUR_ACCESS_TOKEN_HERE
+@announcementId = 1
+
+### Get all announcements (default pagination & sort)
+GET {{baseUrl}}/announcements
+
+### Get announcements with search, sort, and pagination
+GET {{baseUrl}}/announcements?search=MacBook&sort=newest&page=1&perPage=5
+
+### Get announcements sorted by oldest
+GET {{baseUrl}}/announcements?sort=oldest&page=1&perPage=10
+
+### Get announcement by ID
+GET {{baseUrl}}/announcements/{{announcementId}}
+
+### Create announcement (SALE)
+POST {{baseUrl}}/announcements
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "MacBook Pro 16 M3",
+  "description": "Laptop in mint condition with original box and charger",
+  "price": 1299.99,
+  "category": "sale"
+}
+
+### Create announcement (SERVICE)
+POST {{baseUrl}}/announcements
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "Web Development Services",
+  "description": "Full-stack Node.js and React application development",
+  "price": 50,
+  "category": "SERVICE"
+}
+
+### Create announcement (JOB)
+POST {{baseUrl}}/announcements
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "Junior Backend Developer",
+  "description": "Looking for a TypeScript/Node.js developer for remote work",
+  "price": 1500,
+  "category": "JOB"
+}
+
+### Update announcement (partial update)
+PATCH {{baseUrl}}/announcements/{{announcementId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "price": 1199.99,
+  "title": "MacBook Pro 16 M3 (Price Drop)"
+}
+
+### Update announcement (all fields)
+PATCH {{baseUrl}}/announcements/{{announcementId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "MacBook Pro 16 M3 Max",
+  "description": "Updated description: 36GB RAM, 1TB SSD, battery 98%",
+  "price": 1450.00,
+  "category": "OTHER"
+}
+
+### Delete announcement
+DELETE {{baseUrl}}/announcements/{{announcementId}}
+Authorization: Bearer {{accessToken}}

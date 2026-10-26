@@ -1,0 +1,173 @@
+@baseUrl = http://localhost:3000
+@accessToken = YOUR_ACCESS_TOKEN_HERE
+@announcementId = 1
+
+# ==========================================
+# 1. QUERY VALIDATION (GET /announcements)
+# ==========================================
+
+### Invalid sort value (allowed: "newest" | "oldest")
+GET {{baseUrl}}/announcements?sort=price_asc
+
+### Invalid page (must be integer >= 1)
+GET {{baseUrl}}/announcements?page=0
+
+### Invalid page (not a number)
+GET {{baseUrl}}/announcements?page=abc
+
+### Invalid perPage (must be <= 100)
+GET {{baseUrl}}/announcements?perPage=101
+
+### Invalid perPage (must be >= 1)
+GET {{baseUrl}}/announcements?perPage=0
+
+### Invalid search (empty string, min length is 1)
+GET {{baseUrl}}/announcements?search=
+
+
+# ==========================================
+# 2. PARAMS VALIDATION (:id)
+# ==========================================
+
+### Invalid ID: non-numeric string
+GET {{baseUrl}}/announcements/invalid-id
+
+### Invalid ID: zero (must be positive integer)
+GET {{baseUrl}}/announcements/0
+
+### Invalid ID: negative number
+GET {{baseUrl}}/announcements/-5
+
+### Invalid ID: float number
+GET {{baseUrl}}/announcements/1.5
+
+
+# ==========================================
+# 3. CREATE VALIDATION (POST /announcements)
+# ==========================================
+
+### Empty body (missing all required fields)
+POST {{baseUrl}}/announcements
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{}
+
+### Title too short (min 5 characters)
+POST {{baseUrl}}/announcements
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "Mac",
+  "description": "Laptop in mint condition with box and charger",
+  "price": 1299.99,
+  "category": "SALE"
+}
+
+### Title too long (max 50 characters)
+POST {{baseUrl}}/announcements
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "This title is definitely way longer than the fifty characters limit allowed",
+  "description": "Laptop in mint condition with box and charger",
+  "price": 1299.99,
+  "category": "SALE"
+}
+
+### Description too short (min 10 characters)
+POST {{baseUrl}}/announcements
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "MacBook Pro 16",
+  "description": "Too short",
+  "price": 1299.99,
+  "category": "SALE"
+}
+
+### Price is zero or negative (must be > 0)
+POST {{baseUrl}}/announcements
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "MacBook Pro 16",
+  "description": "Laptop in mint condition with box and charger",
+  "price": 0,
+  "category": "SALE"
+}
+
+### Price exceeds maximum (max 99999999.99)
+POST {{baseUrl}}/announcements
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "MacBook Pro 16",
+  "description": "Laptop in mint condition with box and charger",
+  "price": 100000000,
+  "category": "SALE"
+}
+
+### Price wrong type (string instead of number)
+POST {{baseUrl}}/announcements
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "MacBook Pro 16",
+  "description": "Laptop in mint condition with box and charger",
+  "price": "1299.99",
+  "category": "SALE"
+}
+
+### Invalid category (allowed: SALE, SERVICE, JOB, OTHER)
+POST {{baseUrl}}/announcements
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "MacBook Pro 16",
+  "description": "Laptop in mint condition with box and charger",
+  "price": 1299.99,
+  "category": "RENT"
+}
+
+
+# ==========================================
+# 4. UPDATE VALIDATION (PATCH /announcements/:id)
+# ==========================================
+
+### Empty update body (at least one field must be provided)
+PATCH {{baseUrl}}/announcements/{{announcementId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{}
+
+### Invalid field in partial update (negative price & short title)
+PATCH {{baseUrl}}/announcements/{{announcementId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "Abc",
+  "price": -50
+}
+
+### Invalid ID in PATCH params
+PATCH {{baseUrl}}/announcements/not-a-number
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "price": 100
+}
+
+### Invalid ID in DELETE params
+DELETE {{baseUrl}}/announcements/0
+Authorization: Bearer {{accessToken}}
