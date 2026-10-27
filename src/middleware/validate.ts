@@ -37,7 +37,7 @@ export const validateQuery =
   <T extends z.ZodTypeAny>(schema: T) =>
   (
     req: Request,
-    res: Response<any, { query: z.infer<T> }>,
+    res: Response<unknown, { query: z.infer<T> }>,
     next: NextFunction,
   ) => {
     const result = schema.safeParse(req.query);

@@ -7,7 +7,7 @@ import {
 } from "@/validators/announcements.validator.ts";
 import { Prisma, PrismaClient } from "@db/client";
 import { publicUserSelect } from "./auth.service.ts";
-import { ForbiddenError, NotFoundError, UnauthorizedError } from "@/errors/http.error.ts";
+import { ForbiddenError, NotFoundError } from "@/errors/http.error.ts";
 
 export const publicAnnouncementSelect = {
   id: true,

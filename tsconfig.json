@@ -26,6 +26,11 @@
     "noEmit": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["./src/**/*.ts", "prisma.config.ts", "prisma/seed.ts"],
+  "include": [
+    "./src/**/*.ts",
+    "prisma.config.ts",
+    "prisma/seed.ts",
+    "tsup.config.ts"
+  ],
   "exclude": []
 }

@@ -2,7 +2,7 @@ import { HttpError } from "@/errors/http.error.ts";
 import { NextFunction, Request, Response } from "express";
 
 const errorHandler = (
-  err: any,
+  err: Error & { type?: string; code?: string },
   _req: Request,
   res: Response,
   _next: NextFunction,

@@ -3,11 +3,9 @@ import type { Request, Response, NextFunction } from "express";
 import { UnauthorizedError } from "@/errors/http.error.ts";
 import env from "@/config/env.ts";
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: jwt.JwtPayload;
-    }
+declare module "express-serve-static-core" {
+  interface Request {
+    user?: jwt.JwtPayload;
   }
 }
 
@@ -26,7 +24,7 @@ const authenticate = (
     const decoded = jwt.verify(token, env.JWT_SECRET);
     req.user = decoded as jwt.JwtPayload;
     next();
-  } catch (error) {
+  } catch {
     throw new UnauthorizedError("Invalid or expired token");
   }
 };
