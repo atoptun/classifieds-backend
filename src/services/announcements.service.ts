@@ -7,7 +7,7 @@ import {
 } from "@/validators/announcements.validator.ts";
 import { Prisma, PrismaClient } from "@db/client";
 import { publicUserSelect } from "./auth.service.ts";
-import { NotFoundError, UnauthorizedError } from "@/errors/http.error.ts";
+import { ForbiddenError, NotFoundError, UnauthorizedError } from "@/errors/http.error.ts";
 
 export const publicAnnouncementSelect = {
   id: true,
@@ -108,7 +108,7 @@ export class AnnouncementsService {
     body: UpdateAnnouncementBody,
     userId: number,
   ): Promise<AnnouncementResponse> => {
-    this.checkExistAndOwner(id, userId);
+    await this.checkExistAndOwner(id, userId);
 
     const { title, description, price, category } = body;
 
@@ -129,7 +129,7 @@ export class AnnouncementsService {
   };
 
   delete = async (id: number, userId: number): Promise<void> => {
-    this.checkExistAndOwner(id, userId);
+    await this.checkExistAndOwner(id, userId);
 
     await this.db.announcement.delete({
       where: { id },
@@ -150,7 +150,7 @@ export class AnnouncementsService {
     }
 
     if (exist.userId !== userId) {
-      throw new UnauthorizedError("Access denied");
+      throw new ForbiddenError("Access denied");
     }
   };
 }

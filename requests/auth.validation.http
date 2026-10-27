@@ -1,0 +1,162 @@
+@baseUrl = http://localhost:3000
+
+# ==========================================
+# 1. REGISTER VALIDATION (POST /auth/register)
+# ==========================================
+
+### Empty body (missing all required fields)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{}
+
+### Username too short (min 3 characters)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "ab",
+  "email": "john@example.com",
+  "password": "password123",
+  "name": "John Doe"
+}
+
+### Username too long (max 30 characters)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "this_username_is_way_longer_than_30_chars",
+  "email": "john@example.com",
+  "password": "password123",
+  "name": "John Doe"
+}
+
+### Username with invalid characters (only letters, numbers, and underscores allowed)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "john-doe!",
+  "email": "john@example.com",
+  "password": "password123",
+  "name": "John Doe"
+}
+
+### Invalid email format
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "john_doe",
+  "email": "not-an-email",
+  "password": "password123",
+  "name": "John Doe"
+}
+
+### Password too short (min 6 characters)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "john_doe",
+  "email": "john@example.com",
+  "password": "12345",
+  "name": "John Doe"
+}
+
+### Name too short (min 2 characters)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "john_doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "name": "J"
+}
+
+### Wrong field types (numbers instead of strings)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": 12345,
+  "email": 12345,
+  "password": 123456,
+  "name": 123
+}
+
+
+# ==========================================
+# 2. LOGIN VALIDATION (POST /auth/login)
+# ==========================================
+
+### Empty body (missing username and password)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{}
+
+### Missing password field
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "john_doe"
+}
+
+### Wrong field types (number instead of string)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "john_doe",
+  "password": 123456
+}
+
+
+# ==========================================
+# 3. REFRESH TOKEN VALIDATION (POST /auth/refresh)
+# ==========================================
+
+### Empty body (missing refreshToken)
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{}
+
+### Wrong type for refreshToken (number instead of string)
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": 123456789
+}
+
+### Invalid / non-existent refreshToken (401 Unauthorized)
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "invalid_refresh_token_value"
+}
+
+
+# ==========================================
+# 4. AUTHENTICATION VALIDATION (/auth/me & /auth/logout)
+# ==========================================
+
+### GET /auth/me without Authorization header (401 Authentication required)
+GET {{baseUrl}}/auth/me
+
+### GET /auth/me with invalid JWT token (401 Invalid or expired token)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer invalid.jwt.token
+
+### POST /auth/logout without Authorization header (401 Authentication required)
+POST {{baseUrl}}/auth/logout
+
+### POST /auth/logout with invalid JWT token (401 Invalid or expired token)
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer invalid.jwt.token

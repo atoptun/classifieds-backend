@@ -46,8 +46,8 @@ export class AuthController {
     });
   };
 
-  logout = async (req: Request<{}, {}, RefreshTokenBody>, res: Response) => {
-    await this.authService.logout(req.body.refreshToken);
+  logout = async (req: Request, res: Response) => {
+    await this.authService.logout(Number(req.user!.sub));
 
     res.status(204).end();
   };

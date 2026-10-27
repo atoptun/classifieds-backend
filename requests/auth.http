@@ -1,35 +1,39 @@
-### Реєстрація нового користувача
-POST http://localhost:3000/api/auth/register
+@baseUrl = http://localhost:3000
+@accessToken = YOUR_ACCESS_TOKEN_HERE
+@refreshToken = YOUR_REFRESH_TOKEN_HERE
+
+### Registration
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "username": "chef_olena",
-  "email": "olena@example.com",
-  "password": "securepass123",
-  "name": "Олена Шевченко"
+  "username": "john_doe",
+  "email": "john_doe@example.com",
+  "password": "password123",
+  "name": "John Doe"
 }
 
-### Логін
-POST http://localhost:3000/api/auth/login
+### Login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "username": "chef_olena",
-  "password": "securepass123"
+  "username": "john_doe",
+  "password": "password123"
 }
 
-### Оновлення токенів
-POST http://localhost:3000/api/auth/refresh
+### Refresh tokens
+POST {{baseUrl}}/auth/refresh
 Content-Type: application/json
 
 {
-  "refreshToken": "d072ff66c4d0ebf7089d6ca9d51dd82f94d1ab9989f6aab722e0c7759048d45b6329e7943fca5e62"
+  "refreshToken": "{{refreshToken}}"
 }
 
-### Вихід
-POST http://localhost:3000/api/auth/logout
-Content-Type: application/json
+### User info
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{accessToken}}
 
-{
-  "refreshToken": "be513de0d7d01b371c3a4a9254fc01b69bfda22db8d269a8871ab427c3d6949a33635f63001ef62c"
-}
+### Logout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{accessToken}}

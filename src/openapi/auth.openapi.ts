@@ -58,9 +58,7 @@ registry.registerPath({
   path: "/auth/logout",
   tags: ["Auth"],
   summary: "Logout user",
-  request: {
-    body: jsonBody(RefreshTokenSchema),
-  },
+  security: [{ bearerAuth: [] }],
   responses: {
     204: jsonResponse("Logged out successfully"),
   },

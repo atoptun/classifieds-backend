@@ -120,24 +120,26 @@ export class AuthService {
       throw new UnauthorizedError("Refresh token expired");
     }
 
-    await this.db.refreshToken.delete({
-      where: { id: storedToken.id },
-    });
+    // await this.db.refreshToken.delete({
+    //   where: { id: storedToken.id },
+    // });
 
     const tokens = await this.createTokens(storedToken.userId);
 
     return tokens;
   };
 
-  logout = async (refreshToken?: string): Promise<void> => {
-    if (refreshToken) {
-      await this.db.refreshToken.deleteMany({
-        where: { token: refreshToken },
-      });
-    }
+  logout = async (userId: number): Promise<void> => {
+    await this.db.refreshToken.deleteMany({
+      where: { userId },
+    });
   };
 
   createTokens = async (userId: number): Promise<AccessTokens> => {
+    await this.db.refreshToken.deleteMany({
+      where: { userId },
+    });
+
     const accessToken = jwt.sign({ sub: String(userId) }, env.JWT_SECRET, {
       expiresIn: ACCESS_TOKEN_LIFETIME / 1000,
     });

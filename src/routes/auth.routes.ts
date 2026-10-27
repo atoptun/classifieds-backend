@@ -22,7 +22,7 @@ router.post(
   validateBody(RefreshTokenSchema),
   authContoller.refresh,
 );
-router.post("/logout", validateBody(RefreshTokenSchema), authContoller.logout);
+router.post("/logout", authenticate, authContoller.logout);
 router.get("/me", authenticate, authContoller.me);
 
 export default router;
