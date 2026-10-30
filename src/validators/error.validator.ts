@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "@/openapi/registry.ts";
 
 export const HttpErrorSchema = z
   .object({

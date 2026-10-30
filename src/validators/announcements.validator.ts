@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "@/openapi/registry.ts";
 import { AnnouncementCategory, Prisma } from "@db/client";
 import { PublicUserSchema } from "./auth.validator.ts";
 import { publicUserSelect } from "@/services/auth.service.ts";

@@ -28,9 +28,12 @@
   },
   "include": [
     "./src/**/*.ts",
+    "./tests/**/*.ts",
+    "./scripts/**/*.ts",
     "prisma.config.ts",
     "prisma/seed.ts",
-    "tsup.config.ts"
+    "tsup.config.ts",
+    "vitest.config.ts"
   ],
   "exclude": []
 }

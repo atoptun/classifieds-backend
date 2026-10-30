@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/openapi/registry.ts";
 import { User } from "@db/client";
 
 export const RegisterSchema = z

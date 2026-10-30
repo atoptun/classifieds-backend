@@ -17,7 +17,7 @@ services:
 
   nginx:
     volumes:
-      - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - app
       - pgadmin4
