@@ -9,12 +9,23 @@ import { Prisma, PrismaClient } from "@db/client";
 import { publicUserSelect } from "./auth.service.ts";
 import { ForbiddenError, NotFoundError } from "@/errors/http.error.ts";
 
+export type CreateAnnouncementBodyService = CreateAnnouncementBody & {
+  imageUrl?: string | null;
+  imageId?: string | null;
+};
+
+export type UpdateAnnouncementBodyService = UpdateAnnouncementBody & {
+  imageUrl?: string | null;
+  imageId?: string | null;
+};
+
 export const publicAnnouncementSelect = {
   id: true,
   title: true,
   description: true,
   price: true,
   category: true,
+  imageUrl: true,
   createdAt: true,
   updatedAt: true,
   user: { select: publicUserSelect },
@@ -82,10 +93,10 @@ export class AnnouncementsService {
   };
 
   create = async (
-    body: CreateAnnouncementBody,
+    body: CreateAnnouncementBodyService,
     userId: number,
   ): Promise<AnnouncementResponse> => {
-    const { title, description, price, category } = body;
+    const { title, description, price, category, imageUrl, imageId } = body;
 
     const result = await this.db.announcement.create({
       data: {
@@ -93,6 +104,8 @@ export class AnnouncementsService {
         description,
         price,
         category,
+        imageUrl,
+        imageId,
         user: {
           connect: { id: userId },
         },
@@ -105,18 +118,20 @@ export class AnnouncementsService {
 
   update = async (
     id: number,
-    body: UpdateAnnouncementBody,
+    body: UpdateAnnouncementBodyService,
     userId: number,
-  ): Promise<AnnouncementResponse> => {
-    await this.checkExistAndOwner(id, userId);
+  ): Promise<{ updated: AnnouncementResponse; oldImageId: string | null }> => {
+    const exist = await this.checkExistAndOwner(id, userId);
 
-    const { title, description, price, category } = body;
+    const { title, description, price, category, imageUrl, imageId } = body;
 
     const updateData: Prisma.AnnouncementUpdateInput = {
       title,
       description,
       price,
       category,
+      imageUrl,
+      imageId,
     };
 
     const updated = await this.db.announcement.update({
@@ -125,23 +140,28 @@ export class AnnouncementsService {
       data: updateData,
     });
 
-    return updated;
+    return { updated, oldImageId: exist.imageId };
   };
 
-  delete = async (id: number, userId: number): Promise<void> => {
-    await this.checkExistAndOwner(id, userId);
+  delete = async (
+    id: number,
+    userId: number,
+  ): Promise<{ oldImageId: string | null }> => {
+    const exist = await this.checkExistAndOwner(id, userId);
 
     await this.db.announcement.delete({
       where: { id },
     });
+
+    return { oldImageId: exist.imageId };
   };
 
   private checkExistAndOwner = async (
     id: number,
     userId: number,
-  ): Promise<void> => {
+  ): Promise<Prisma.AnnouncementModel> => {
     const exist = await this.db.announcement.findUnique({
-      select: { id: true, userId: true },
+      // select: { id: true, userId: true },
       where: { id },
     });
 
@@ -152,5 +172,7 @@ export class AnnouncementsService {
     if (exist.userId !== userId) {
       throw new ForbiddenError("Access denied");
     }
+
+    return exist;
   };
 }

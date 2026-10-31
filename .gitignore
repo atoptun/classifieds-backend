@@ -6,3 +6,12 @@ node_modules
 src/generated/prisma
 
 dist/
+
+.vitest/
+coverage/
+test-results/
+
+logs/
+*.log
+
+tmp/

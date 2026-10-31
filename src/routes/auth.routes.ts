@@ -1,4 +1,5 @@
 import { Router } from "express";
+import rateLimit from "express-rate-limit";
 import { AuthController } from "@/controllers/auth.controller.ts";
 import { validateBody } from "@/middleware/validate.ts";
 import {
@@ -13,7 +14,17 @@ import authenticate from "@/middleware/authenticate.ts";
 const authService = new AuthService(prisma);
 const authContoller = new AuthController(authService);
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later" },
+});
+
 const router = Router();
+
+router.use(limiter);
 
 router.post("/register", validateBody(RegisterSchema), authContoller.register);
 router.post("/login", validateBody(LoginSchema), authContoller.login);

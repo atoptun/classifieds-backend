@@ -4,10 +4,23 @@ import {
   AnnouncementResponseSchema,
   CreateAnnouncementSchema,
   GetAnnouncementsQuerySchema,
+  ImageFileSchema,
   UpdateAnnouncementSchema,
 } from "@/validators/announcements.validator.ts";
-import { errorResponse, jsonBody, jsonResponse } from "./helper.ts";
+import { errorResponse, jsonOrMultipartBody, jsonResponse } from "./helper.ts";
 import { registry } from "./registry.ts";
+
+export const CreateAnnouncementMultipartSchema =
+  CreateAnnouncementSchema.extend({
+    image: ImageFileSchema,
+  }).openapi("CreateAnnouncementMultipart");
+
+export const UpdateAnnouncementMultipartSchema =
+  CreateAnnouncementSchema.partial()
+    .extend({
+      image: ImageFileSchema,
+    })
+    .openapi("UpdateAnnouncementMultipart");
 
 registry.registerPath({
   method: "get",
@@ -49,7 +62,10 @@ registry.registerPath({
   summary: "Create a new announcement",
   security: [{ bearerAuth: [] }],
   request: {
-    body: jsonBody(CreateAnnouncementSchema),
+    body: jsonOrMultipartBody(
+      CreateAnnouncementSchema,
+      CreateAnnouncementMultipartSchema,
+    ),
   },
   responses: {
     201: jsonResponse(
@@ -69,7 +85,10 @@ registry.registerPath({
   security: [{ bearerAuth: [] }],
   request: {
     params: AnnouncementParamsSchema,
-    body: jsonBody(UpdateAnnouncementSchema),
+    body: jsonOrMultipartBody(
+      UpdateAnnouncementSchema,
+      UpdateAnnouncementMultipartSchema,
+    ),
   },
   responses: {
     200: jsonResponse(

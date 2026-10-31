@@ -14,6 +14,7 @@ import {
 } from "@/validators/announcements.validator.ts";
 import { AnnouncementsService } from "@/services/announcements.service.ts";
 import { AnnouncementsController } from "@/controllers/announcements.controller.ts";
+import { uploadSingle } from "@/middleware/upload.ts";
 
 const service = new AnnouncementsService(prisma);
 const controller = new AnnouncementsController(service);
@@ -35,6 +36,7 @@ router.get(
 router.post(
   "/",
   authenticate,
+  uploadSingle("image"),
   validateBody(CreateAnnouncementSchema),
   controller.createAnnouncement,
 );
@@ -43,6 +45,7 @@ router.patch(
   "/:id",
   authenticate,
   validateParams(AnnouncementParamsSchema),
+  uploadSingle("image"),
   validateBody(UpdateAnnouncementSchema),
   controller.updateAnnouncement,
 );

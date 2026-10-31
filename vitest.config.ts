@@ -7,7 +7,10 @@ export default defineConfig({
     env: {
       DATABASE_URL: process.env.TEST_DATABASE_URL,
     },
-    setupFiles: ["./tests/setup.ts"],
+    setupFiles: [
+      // "./tests/migrate-test.ts", // for migrate the test base before running the tests
+      "./tests/setup.ts",
+    ],
     fileParallelism: false,
     include: [
       "tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",

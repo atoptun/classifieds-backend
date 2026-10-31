@@ -24,6 +24,20 @@ export const jsonBody = (schema: z.ZodType): ZodRequestBody => ({
   },
 });
 
+export const jsonOrMultipartBody = (
+  jsonSchema: z.ZodType,
+  multipartSchema: z.ZodType,
+): ZodRequestBody => ({
+  content: {
+    "multipart/form-data": {
+      schema: multipartSchema,
+    },
+    "application/json": {
+      schema: jsonSchema,
+    },
+  },
+});
+
 export const errorResponse = (message: string, error?: string) => ({
   description: message,
   content: {

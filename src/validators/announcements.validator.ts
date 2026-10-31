@@ -37,12 +37,16 @@ export const AnnouncementResponseSchema = z
     category: z
       .enum(AnnouncementCategory)
       .openapi({ example: AnnouncementCategory.SALE }),
+    imageUrl: z.url().nullable().openapi({
+      example:
+        "https://res.cloudinary.com/demo/image/upload/v1/announcements/abc123.jpg",
+    }),
     createdAt: z.date().openapi({ example: "2026-01-01T12:00:00.000Z" }),
     updatedAt: z.date().openapi({ example: "2026-01-01T12:00:00.000Z" }),
     user: PublicUserSchema,
   })
   .openapi("Announcement") satisfies z.ZodType<
-  Omit<AnnouncementResponsePayload, "userId">
+  Omit<AnnouncementResponsePayload, "userId" | "imageId">
 >;
 
 export const InputCategorySchema = z.preprocess(
@@ -55,7 +59,7 @@ export const CreateAnnouncementSchema = AnnouncementResponseSchema.pick({
   description: true,
 })
   .extend({
-    price: z
+    price: z.coerce
       .number()
       .positive("Price must be greater than 0")
       .max(99999999.99)
@@ -86,6 +90,12 @@ export const PaginationSchema = z.object({
 export const AnnouncementPaginationListSchema = z.object({
   data: z.array(AnnouncementResponseSchema),
   pagination: PaginationSchema,
+});
+
+export const ImageFileSchema = z.string().optional().openapi({
+  type: "string",
+  format: "binary",
+  description: "Announcement image (JPEG, PNG, WEBP, max 5MB)",
 });
 
 export type GetAnnouncementsQuery = z.infer<typeof GetAnnouncementsQuerySchema>;

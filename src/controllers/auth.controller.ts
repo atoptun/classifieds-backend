@@ -15,6 +15,8 @@ export class AuthController {
       user.id,
     );
 
+    req.log.info(`User registered: ${user.username} (ID: ${user.id})`);
+
     res.status(201).json({
       user,
       accessToken,
@@ -27,6 +29,8 @@ export class AuthController {
     const { accessToken, refreshToken } = await this.authService.createTokens(
       user.id,
     );
+
+    req.log.info(`User logged in: ${user.username} (ID: ${user.id})`);
 
     res.status(200).json({
       user,
@@ -48,6 +52,8 @@ export class AuthController {
 
   logout = async (req: Request, res: Response) => {
     await this.authService.logout(Number(req.user!.sub));
+
+    req.log.info(`User logged out: ID ${req.user!.sub}`);
 
     res.status(204).end();
   };
